@@ -30,7 +30,7 @@ Visualization heatmap of cluster data of sce
 }
 \examples{
 
-sce.file <- system.file("extdata/sce.rds", package = "jhuanglabHyperion")
+sce.file <- system.file("extdata/sce.rds", package = "imctoolkits")
 sce <- readRDS(file = sce.file)
 
 plotClusterHeatmap(sce)

@@ -3,3 +3,5 @@
 .RData
 .Ruserdata
 lazy.sh
+.gitignore
+.DS_Store

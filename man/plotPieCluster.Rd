@@ -34,7 +34,7 @@ Visualization pie plot of cluster data of sce
 }
 \examples{
 
-sce.file <- system.file("extdata/sce.rds", package = "jhuanglabHyperion")
+sce.file <- system.file("extdata/sce.rds", package = "imctoolkits")
 sce <- readRDS(file = sce.file)
 
 # Runs only have more than two stages

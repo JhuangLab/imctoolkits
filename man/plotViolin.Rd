@@ -41,7 +41,7 @@ Visualization violin plot of sce
 }
 \examples{
 
-sce.file <- system.file("extdata/sce.rds", package = "jhuanglabHyperion")
+sce.file <- system.file("extdata/sce.rds", package = "imctoolkits")
 sce <- readRDS(file = sce.file)
 
 plotViolin(sce, marker = "CD34")
