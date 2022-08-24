@@ -1,12 +1,11 @@
 ---
-title: "An introduction to the imctoolkits toolkit"
+title: "An introduction to the imctoolkits"
 author: 
 - name: Jinyan Huang
   affiliation: 
     - Biomedical big data center, the First Affiliated Hospital, Zhejiang University School of Medicine, 79 Qingchun Road, Hangzhou, 310003, Zhejiang, China. 
     - Zhejiang Provincial Key Laboratory of Pancreatic Disease, Zhejiang University School of Medicine First Affiliated Hospital, Hangzhou, China. 
     - Zhejiang University Cancer Center, Zhejiang University, Hangzhou, China.
-  email: huangjinyan@zju.edu.cn
 package: imctoolkits
 output:
   BiocStyle::html_document:
