@@ -1,5 +1,5 @@
 ---
-title: "An introduction to the jhuanglabHyperion toolkit"
+title: "An introduction to the imctoolkits toolkit"
 author: 
 - name: Jinyan Huang
   affiliation: 
@@ -7,12 +7,12 @@ author:
     - Zhejiang Provincial Key Laboratory of Pancreatic Disease, Zhejiang University School of Medicine First Affiliated Hospital, Hangzhou, China. 
     - Zhejiang University Cancer Center, Zhejiang University, Hangzhou, China.
   email: huangjinyan@zju.edu.cn
-package: jhuanglabHyperion
+package: imctoolkits
 output:
   BiocStyle::html_document:
     toc_float: true
 vignette: >
-  %\VignetteIndexEntry{1. An introduction to the jhuanglabHyperion toolkit}
+  %\VignetteIndexEntry{1. An introduction to the imctoolkits toolkit}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -36,10 +36,8 @@ knitr::opts_chunk$set(echo = TRUE, cache = FALSE, eval = TRUE,
 ```
 
 # Introduction
-*rmarkdown::render("~/projects/pkgs/jhuanglabHyperion/vignettes/tutorial.Rmd")* 
-
-
-Imaging Mass Cytometry™ (IMC™) is a vital tool that allows researchers to gain an appreciation of the role of heterogeneity in cell function and assess complex phenotypes and tumor-immune interactions in the tissue and tumor microenvironment. Based on this technology, researchers can gain a deeper understanding of the spatial environment which will help to answer important translational and clinical research questions. Although multidimensional single-cell transcriptome or single-cell-based flow and mass cytometry tools have been increasingly developed to analyze these data, integrated analysis workflows to facilitate the interpretation of experimental Imaging Mass Cytometry™ (IMC™) remain unexplored. We present jhuanglabHyperion, a comprehensive R package designed for the analysis and interpretation of IMC data. Just for fun.
+*rmarkdown::render("~/projects/pkgs/imctoolkits/vignettes/tutorial.Rmd")* 
+Imaging Mass Cytometry™ (IMC™) is a vital tool that allows researchers to gain an appreciation of the role of heterogeneity in cell function and assess complex phenotypes and tumor-immune interactions in the tissue and tumor microenvironment. Based on this technology, researchers can gain a deeper understanding of the spatial environment which will help to answer important translational and clinical research questions. Although multidimensional single-cell transcriptome or single-cell-based flow and mass cytometry tools have been increasingly developed to analyze these data, integrated analysis workflows to facilitate the interpretation of experimental Imaging Mass Cytometry™ (IMC™) remain unexplored. We present imctoolkits, a comprehensive R package designed for the analysis and interpretation of IMC data.
 
 **This package is developed based on jhuanglab previous R package [CytoTree](http://www.bioconductor.org/packages/release/bioc/html/CytoTree.html) by Yuting DAI. Parts of function is from Xinlei Chen.**
 
@@ -47,7 +45,7 @@ Imaging Mass Cytometry™ (IMC™) is a vital tool that allows researchers to ga
 
 # Overview of Workflow
 
-The `jhuanglabHyperion` package is developed to complete the majority of standard analysis and visualization workflow for IMC data.
+The `imctoolkits` package is developed to complete the majority of standard analysis and visualization workflow for IMC data.
 
 -   **Preprocessing**. Data import, subtset, quality control, filtration, normalization and merge cells.
 
@@ -58,17 +56,17 @@ The `jhuanglabHyperion` package is developed to complete the majority of standar
 
 # Quick-start code
 
-To run `jhuanglabHyperion`, the first step is to build a [SingleCellExperiment](https://bioconductor.org/packages/devel/bioc/vignettes/SingleCellExperiment/inst/doc/intro.html) object with imcRtools. Here are the main functions in `jhuanglabHyperion`.
+To run `imctoolkits`, the first step is to build a [SingleCellExperiment](https://bioconductor.org/packages/devel/bioc/vignettes/SingleCellExperiment/inst/doc/intro.html) object with imcRtools. Here are the main functions in `imctoolkits`.
 
 ```{r eval = F}
 
 # Loading packages
 suppressMessages({
-library(jhuanglabHyperion)
+library(imctoolkits)
 })
 
 # Read IMC files
-fn_path <- fs::path_package("jhuanglabHyperion","extdata/rds/demo.rds")
+fn_path <- fs::path_package("imctoolkits","extdata/rds/demo.rds")
 demo <- readr::read_rds(fn_path)
 
 # Or your can get a single cell object with read_steinbock function
@@ -79,10 +77,10 @@ demo <- read_steinbock(dat_dir, return_as = "sce")
 dim(demo)
 
 ################################################
-##### Running jhuanglabHyperion in one line code
+##### Running imctoolkits in one line code
 ################################################
 
-# Run jhuanglabHyperion as pipeline and visualize as tree
+# Run imctoolkits as pipeline and visualize as tree
 sce <- demo %>% remove_duplicate() %>% filter_rare_marker_exp() %>% normalize_hyp() %>% pca_hyp() %>%
             imcAsinh_trans() %>% simpleAsinh_trans() %>% phate_hyp() %>% diffusionmap_hyp() %>% 
             tsne_hyp() %>% umap_hyp() %>% run_cluster(cluster.method = "phenograph") %>%
