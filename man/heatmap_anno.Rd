@@ -2,7 +2,8 @@
 % Please edit documentation in R/heatmap.R
 \name{heatmap_anno}
 \alias{heatmap_anno}
-\title{Visualization heatmap of data of sce}
+\title{Visualization heatmap of data of sce, part of codes are modified from Cytotree R package.
+Thanks Yuting Dai.}
 \usage{
 heatmap_anno(
   sce,
@@ -32,5 +33,6 @@ the row direction or the column direction, or none. Corresponding values are
 ComplexHeatmap Heatmap figure
 }
 \description{
-Visualization heatmap of data of sce
+Visualization heatmap of data of sce, part of codes are modified from Cytotree R package.
+Thanks Yuting Dai.
 }

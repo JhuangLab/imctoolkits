@@ -2,7 +2,8 @@
 % Please edit documentation in R/heatmap.R
 \name{plot_heatmap}
 \alias{plot_heatmap}
-\title{Visualization heatmap of data of sce}
+\title{Visualization heatmap of data of sce, part of codes are modified from Cytotree R package.
+Thanks Yuting Dai.}
 \usage{
 plot_heatmap(tiffs, res, sce, filenam)
 }
@@ -25,5 +26,6 @@ the row direction or the column direction, or none. Corresponding values are
 ComplexHeatmap Heatmap figure
 }
 \description{
-Visualization heatmap of data of sce
+Visualization heatmap of data of sce, part of codes are modified from Cytotree R package.
+Thanks Yuting Dai.
 }
