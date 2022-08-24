@@ -1,0 +1,271 @@
+---
+title: "An introduction to the jhuanglabHyperion toolkit"
+author: 
+- name: Jinyan Huang
+  affiliation: 
+    - Biomedical big data center, the First Affiliated Hospital, Zhejiang University School of Medicine, 79 Qingchun Road, Hangzhou, 310003, Zhejiang, China. 
+    - Zhejiang Provincial Key Laboratory of Pancreatic Disease, Zhejiang University School of Medicine First Affiliated Hospital, Hangzhou, China. 
+    - Zhejiang University Cancer Center, Zhejiang University, Hangzhou, China.
+  email: huangjinyan@zju.edu.cn
+package: jhuanglabHyperion
+output:
+  BiocStyle::html_document:
+    toc_float: true
+vignette: >
+  %\VignetteIndexEntry{1. An introduction to the jhuanglabHyperion toolkit}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{css, echo=FALSE}
+    body .main-container {
+      max-width: 100%;
+      width: 100% !important;
+    }
+    body {
+      max-width: 100% !important;
+    }
+    span.header-section-number {
+      float: left;
+      width: 30px;
+    }
+```
+```{r echo = TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE, eval = TRUE,
+                      warning = TRUE, message = TRUE,
+                      fig.width = 6, fig.height = 5)
+```
+
+# Introduction
+*rmarkdown::render("~/projects/pkgs/jhuanglabHyperion/vignettes/tutorial.Rmd")* 
+
+
+Imaging Mass Cytometry™ (IMC™) is a vital tool that allows researchers to gain an appreciation of the role of heterogeneity in cell function and assess complex phenotypes and tumor-immune interactions in the tissue and tumor microenvironment. Based on this technology, researchers can gain a deeper understanding of the spatial environment which will help to answer important translational and clinical research questions. Although multidimensional single-cell transcriptome or single-cell-based flow and mass cytometry tools have been increasingly developed to analyze these data, integrated analysis workflows to facilitate the interpretation of experimental Imaging Mass Cytometry™ (IMC™) remain unexplored. We present jhuanglabHyperion, a comprehensive R package designed for the analysis and interpretation of IMC data. Just for fun.
+
+**This package is developed based on jhuanglab previous R package [CytoTree](http://www.bioconductor.org/packages/release/bioc/html/CytoTree.html) by Yuting DAI. Parts of function is from Xinlei Chen.**
+
+**CytoTree is publised on BMC bioinformatics [CytoTree](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-021-04054-2).**
+
+# Overview of Workflow
+
+The `jhuanglabHyperion` package is developed to complete the majority of standard analysis and visualization workflow for IMC data.
+
+-   **Preprocessing**. Data import, subtset, quality control, filtration, normalization and merge cells.
+
+-   **Analysis**. This part is designed for time course IMC data.
+
+-   **Visualization**. The visualization part can provide clear and concise visualization of IMC data in an effective and easy-to-comprehend manner.
+
+
+# Quick-start code
+
+To run `jhuanglabHyperion`, the first step is to build a [SingleCellExperiment](https://bioconductor.org/packages/devel/bioc/vignettes/SingleCellExperiment/inst/doc/intro.html) object with imcRtools. Here are the main functions in `jhuanglabHyperion`.
+
+```{r eval = F}
+
+# Loading packages
+suppressMessages({
+library(jhuanglabHyperion)
+})
+
+# Read IMC files
+fn_path <- fs::path_package("jhuanglabHyperion","extdata/rds/demo.rds")
+demo <- readr::read_rds(fn_path)
+
+# Or your can get a single cell object with read_steinbock function
+dat_dir <- "~/projects/hyperion/analysis/qzhang/human/steinbock/tumor/measure/p223_pdac"
+demo <- read_steinbock(dat_dir, return_as = "sce")
+
+#demo is a SingleCellExperiment class object.
+dim(demo)
+
+################################################
+##### Running jhuanglabHyperion in one line code
+################################################
+
+# Run jhuanglabHyperion as pipeline and visualize as tree
+sce <- demo %>% remove_duplicate() %>% filter_rare_marker_exp() %>% normalize_hyp() %>% pca_hyp() %>%
+            imcAsinh_trans() %>% simpleAsinh_trans() %>% phate_hyp() %>% diffusionmap_hyp() %>% 
+            tsne_hyp() %>% umap_hyp() %>% run_cluster(cluster.method = "phenograph") %>%
+            run_cluster(cluster.method = "som")
+plot2D(sce, item.use = c("UMAP_1", "UMAP_2"))
+
+```
+
+Here we provied the running template of trajectory inference using sce object is as follows:
+
+```{r eval = F}
+
+# Cluster cells by SOM algorithm
+set.seed(2021)
+
+```
+
+# Manuplate data
+
+Basic skills to manipulate SingleCellExperiment class object.
+```{r eval = F}
+  # get reduced names
+  reducedDims(sce)
+  > reducedDims(sce)
+  List of length 1
+  names(1): tsne
+  # get counts or transformed data frame names
+  assayNames(sce)
+  > assayNames(sce)
+  [1] "counts"      "imcAsinh"    "simpleAsinh" "logcounts" 
+  # get meta data
+  colData(sce)
+  #  get counts or transformed data frame
+  assay(sce, "counts")
+  assay(sce, "logcounts")
+  assay(sce, "imcAsinh")
+  assay(sce, "simpleAsinh")
+```
+
+## subset
+
+```{r eval = F}
+  #filter markers unwanted.
+  filter_makers <- c("80ArAr", "120Sn", "127I", "134Xe", "138Ba", "DNA1", "DNA2", "Histone3", "208Pb")
+  sce <- sce %>% subset_hyp(cell_number = 2000) %>% filter_makers(filter_makers)
+  #add annotation to colData(sce)
+  sce <- init_metadata(sce, "p107_liver", stype = "puncture")
+```
+## fetch data
+
+```{r eval = F}
+# fetch data for heatmap plot. Get a list. heatmap_dat for heatmap plot. 
+# cluster_prop for cluster proportion.
+heatmap_data_scale <- fetch_heatmap_dat(sce_anno, scale = T)
+names(heatmap_data_scale)
+
+# get reduce and marker expression data frame
+df <- fetch_reducedims(sce, assay = "logcounts")
+# get reduce and specific marker expression data frame
+df <- fetch_plot_reducedims(sce, marker = "CD45", iterm.use = c("UMAP_1", "UMAP_2"))
+
+```
+## Normlization
+```{r eval = F}
+# log 
+sce <- sce %>% normalize_hyp() 
+# imcAsinh transfer
+sce <- sce %>% imcAsinh_trans() 
+# simpleAsinh transfer
+sce <- sce %>% simpleAsinh_trans() 
+#
+```
+
+## reduce dims
+
+```{r eval = F}
+# RUN pCA, default with assay logcounts.
+sce <- sce %>% pca_hyp()
+sce <- sce %>% pca_hyp(assay = "counts")
+sce <- sce %>% pca_hyp(assay = "imcAsinh")
+sce <- sce %>% pca_hyp(assay = "simpleAsinh")
+
+# Run [PHATE](https://github.com/KrishnaswamyLab/PHATE)
+sce <- sce %>% phate_hyp()
+
+
+# Run diffusionmap
+sce <- sce %>% diffusionmap_hyp()
+
+
+# Run tsne
+sce <- sce %>% tsne_hyp()
+
+# Run umap
+sce <- sce %>% umap_hyp()
+
+
+# Run all in one line code
+sce <- sce %>% pca_hyp() %>% phate_hyp() %>% diffusionmap_hyp() %>% tsne_hyp() %>% umap_hyp()
+```
+## find cluster
+```{r eval = F}
+# Run phenograph
+sce <- run_cluster(sce, cluster.method = "phenograph")
+# Using different k or knn value.
+sce <- run_cluster(sce, cluster.method = "phenograph", k = 20)
+
+
+# cluster.method = c("som", "kmeans", "clara", "phenograph", "hclust", "mclust")
+# Possible value for assay can be: assayNames(sce)
+sce <- run_cluster(sce, assay = "counts", cluster.method = "phenograph", k = 20)
+
+
+# Run FlowSOM::SOM
+sce <- run_cluster(sce, cluster.method = "som")
+# Default xdim and ydim are 6. Different xdim and ydim can be set.
+sce <- run_cluster(sce, cluster.method = "som", xdim = 8, ydim = 8)
+
+
+# Run Chen Xinlei's method.
+sce <- meta_clustering(sce)
+```
+
+# Visualization
+
+The running template of visualization is as follows:
+
+## heatmap
+
+```{r  eval = F, out.width='50%', fig.asp=.75, fig.align='center'}
+
+# plot heatmap
+colors <- jhtools::show_me_the_colors("single_cell")
+heatmap_data_scale <- fetch_heatmap_dat(sce_anno, scale = T)
+cluster_prop <- heatmap_data_scale$cluster_prop
+row_ha = ComplexHeatmap::rowAnnotation(cluster_prop = anno_barplot(cluster_prop[ ,3],
+                                       gp = gpar(fill = colors)))
+heatmap_plot <- heatmap_data_scale$heatmap_dat
+col_fun = circlize::colorRamp2(c(-2, 0, 2,  6), c("blue", "white", "#ee1111", "red"))
+pdf("heatmap_scale_color1.pdf", width = 8, height = 6)
+  ht <- ComplexHeatmap::Heatmap(heatmap_plot, col = col_fun,
+          row_labels = rownames(heatmap_plot))
+  ht <- attach_annotation(ht, row_ha, side = "right")
+  ht
+dev.off()
+
+```
+## feature plot
+
+```{r  eval = F, out.width='50%', fig.asp=.75, fig.align='center'}
+
+# plot markers
+p <- plot2d(sce_merge, color.by="cluster.id", category = "categorical", item.use = c("tSNE_1", "tSNE_2"))
+ggsave("EGFR_tsne.pdf",p, width = 6, height = 4)
+p <- plot2d(sce_merge, color.by="cluster.id", category = "categorical", item.use = c("UMAP_1", "UMAP_2"))
+ggsave("EGFR_umap.pdf",p, width = 6, height = 4)
+p <- plot2d(sce_merge, color.by="cluster.id", category = "categorical", item.use = c("PHATE_1", "PHATE_2"))
+ggsave("EGFR_phate.pdf",p, width = 6, height = 4)
+
+```
+
+# References
+
+1.  Hahne F, Arlt D, Sauermann M, Majety M, Poustka A, Wiemann S, Huber W: Statistical methods and software for the analysis of highthroughput reverse genetic assays using flow cytometry readouts. Genome Biol 2006, 7:R77.
+2.  Olsen LR, Leipold MD, Pedersen CB, Maecker HT: The anatomy of single cell mass cytometry data. cytometry A 2019, 95:156-172.
+3.  Butler A, Hoffman P, Smibert P, Papalexi E, Satija R: Integrating single-cell transcriptomic data across different conditions, technologies, and species. Nat Biotechnol 2018, 36:411-420.
+4.  Trapnell C, Cacchiarelli D, Grimsby J, Pokharel P, Li S, Morse M, Lennon NJ, Livak KJ, Mikkelsen TS, Rinn JL: The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells. Nat Biotechnol 2014, 32:381-386.
+5.  Kiselev VY, Yiu A, Hemberg M: scmap: projection of single-cell RNA-seq data across data sets. Nat Methods 2018, 15:359-362.
+6.  Amir el AD, Davis KL, Tadmor MD, Simonds EF, Levine JH, Bendall SC, Shenfeld DK, Krishnaswamy S, Nolan GP, Pe'er D: viSNE enables visualization of high dimensional single-cell data and reveals phenotypic heterogeneity of leukemia. Nat Biotechnol 2013, 31:545-552.
+7.  Haghverdi L, Buettner F, Theis FJ: Diffusion maps for high-dimensional single-cell analysis of differentiation data. Bioinformatics 2015, 31:2989-2998.
+8.  Becht E, McInnes L, Healy J, Dutertre CA, Kwok IWH, Ng LG, Ginhoux F, Newell EW: Dimensionality reduction for visualizing single-cell data using UMAP. Nat Biotechnol 2018.
+9.  Wang L, Hoffman RA: Standardization, Calibration, and Control in Flow cytometry. Curr Protoc sceom 2017, 79:1 3 1-1 3 27.
+10. Hahne F, LeMeur N, Brinkman RR, Ellis B, Haaland P, Sarkar D, Spidlen J, Strain E, Gentleman R: flowCore: a Bioconductor package for high throughput flow cytometry. BMC Bioinformatics 2009, 10:106.
+11. Sarkar D, Le Meur N, Gentleman R: Using flowViz to visualize flow cytometry data. Bioinformatics 2008, 24:878-879.
+12. Van Gassen S, Callebaut B, Van Helden MJ, Lambrecht BN, Demeester P, Dhaene T, Saeys Y: FlowSOM: Using self-organizing maps for visualization and interpretation of cytometry data. cytometry A 2015, 87:636-645.
+13. Qiu P, Simonds EF, Bendall SC, Gibbs KD, Jr., Bruggner RV, Linderman MD, Sachs K, Nolan GP, Plevritis SK: Extracting a cellular hierarchy from high-dimensional cytometry data with SPADE. Nat Biotechnol 2011, 29:886-891.
+14. Chen H, Lau MC, Wong MT, Newell EW, Poidinger M, Chen J: sceofkit: A Bioconductor Package for an Integrated Mass cytometry Data Analysis Pipeline. PLoS Comput Biol 2016, 12:e1005112.
+15. Chattopadhyay PK, Winters AF, Lomas WE, 3rd, Laino AS, Woods DM: High-Parameter Single-Cell Analysis. Annu Rev Anal Chem (Palo Alto Calif) 2019, 12:411-430.
+16. Bendall SC, Davis KL, Amir el AD, Tadmor MD, Simonds EF, Chen TJ, Shenfeld DK, Nolan GP, Pe'er D: Single-cell trajectory detection uncovers progression and regulatory coordination in human B cell development. Cell 2014, 157:714-725.
+17. Nowicka M, Krieg C, Crowell HL, Weber LM, Hartmann FJ, Guglietta S, Becher B, Levesque MP, Robinson MD: sceOF workflow: differential discovery in high-throughput high-dimensional cytometry datasets. F1000Res 2017, 6:748.
+
+# Session information
+
+```{r}
+sessionInfo()
+```

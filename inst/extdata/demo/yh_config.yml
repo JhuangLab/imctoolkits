@@ -1,0 +1,10 @@
+default:
+  samplename: "{{samplename}}"
+  species: "{{species}}"
+  datadir: "~/projects/{{project}}/data/{{dataset}}/{{species}}/hyperion"
+  threads: 90
+steinbock:
+  bin_path: "~/bin/tools/"
+  cropsize: 500
+  panel_fn: "~/projects/{{project}}/data/{{dataset}}/{{species}}/hyperion/panel.csv"
+  outputdir: : "~/projects/{{project}}/analysis/{{dataset}}/{{species}}/steinbock"

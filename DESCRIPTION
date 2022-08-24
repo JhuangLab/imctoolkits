@@ -1,0 +1,33 @@
+Package: imctoolkits
+Type: Package
+Title: A Toolkit for Imaging Mass Cytometry™ (IMC™) with the Hyperion™ Imaging System Data
+Version: 1.0.0
+Date: 2021-12-12
+Authors@R: person("Jinyan", "Huang", role = c("aut", "cre"), email = "huangjinyan@zju.edu.cn")
+Description: A toolkit for Imaging Mass Cytometry™ (IMC™) with the Hyperion™ Imaging System Data.
+    imctoolkits is a valuable tool to build a 
+    tree-shaped trajectory using IMC data. 
+    The application of imctoolkits ranges from clustering 
+    and dimensionality reduction to trajectory reconstruction 
+    and pseudotime estimation. It offers complete analyzing 
+    workflow for IMC data. 
+Depends: R (>= 4.0)
+Imports: Rtsne, ggplot2, destiny, gmodels, glue,
+        flowUtils, Biobase, Matrix, flowCore, sva,
+        matrixStats, methods, mclust, prettydoc, BiocNeighbors,
+        cluster, pheatmap, scatterpie, umap, scatterplot3d,
+        limma, stringr, grDevices, grid, stats,FlowSOM,
+        jhtools, fs, tidyverse, igraph, data.table
+Suggests: BiocGenerics, knitr, RColorBrewer,
+        rmarkdown, testthat, BiocStyle
+biocViews: CellBiology, Clustering, Visualization, 
+        Software, CellBasedAssays, 
+        NetworkInference, Network
+VignetteBuilder: knitr
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.0
+BugReports: https://github.com/JhuangLab/imctoolkits/issues
+git_url: https://github.com/JhuangLab/imctoolkits
+URL: http://www.r-project.org, https://github.com/JhuangLab/imctoolkits
