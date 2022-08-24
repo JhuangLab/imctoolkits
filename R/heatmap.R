@@ -17,7 +17,7 @@
 #'
 #' @examples
 #'
-#' sce.file <- system.file("extdata/sce.rds", package = "jhuanglabHyperion")
+#' sce.file <- system.file("extdata/sce.rds", package = "imctoolkits")
 #' sce <- readRDS(file = sce.file)
 #'
 #' plotClusterHeatmap(sce)
@@ -63,7 +63,7 @@ plotClusterHeatmap <- function(object,
 #'
 #' @examples
 #'
-#' sce.file <- system.file("extdata/sce.rds", package = "jhuanglabHyperion")
+#' sce.file <- system.file("extdata/sce.rds", package = "imctoolkits")
 #' sce <- readRDS(file = sce.file)
 #'
 #' plotBranchHeatmap(sce)
@@ -168,7 +168,7 @@ plotTrajHeatmap <- function(object,
 #'
 #' @examples
 #'
-#' sce.file <- system.file("extdata/sce.rds", package = "jhuanglabHyperion")
+#' sce.file <- system.file("extdata/sce.rds", package = "imctoolkits")
 #' sce <- readRDS(file = sce.file)
 #'
 #' plotHeatmap(sce)
@@ -284,7 +284,7 @@ heatmap_anno_combined <- function(sce, keycol = "cell_type10",
   meta_all <- metadata(sce)$sampleinfo
   coldata <- as.data.frame(colData(sce))
   # generate heatmap matrix
-  c_mat_lst <- jhuanglabHyperion::fetch_heatmap_dat(sce, cluster.id = keycol)
+  c_mat_lst <- imctoolkits::fetch_heatmap_dat(sce, cluster.id = keycol)
   c_mat <- c_mat_lst[[1]]
   cluster_prop <- c_mat_lst[[2]]
   c_mat <- c_mat[!rownames(c_mat) %in% c("Unknown", "negative"),  ]

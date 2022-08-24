@@ -323,7 +323,7 @@ value_censor <- function(obj, assay = "compcounts", range = c(-2.5, 2.5)) {
 #'
 spillover_correction <- function(sce, assayname = "counts", methodname = "nnls", co_factor = 5) {
   message(Sys.time(), ": spillover correction")
-  fn <- fs::path_package("jhuanglabHyperion", "extdata/data/Isotope_Purity_Matrix.csv")
+  fn <- fs::path_package("imctoolkits", "extdata/data/Isotope_Purity_Matrix.csv")
   compensation_matrix <- read.csv(fn)
   rownames(compensation_matrix) <- compensation_matrix[, 1]
   compensation_matrix <- compensation_matrix[, -1]

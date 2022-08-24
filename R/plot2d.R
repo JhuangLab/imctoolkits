@@ -23,7 +23,7 @@
 #'
 #' @examples
 #'
-#' sce.file <- system.file("extdata/sce.rds", package = "jhuanglabHyperion")
+#' sce.file <- system.file("extdata/sce.rds", package = "imctoolkits")
 #' sce <- readRDS(file = sce.file)
 #'
 #' # Default plot
@@ -196,7 +196,7 @@ plot2d <- function(object,
 #'
 #' @examples
 #'
-#' sce.file <- system.file("extdata/sce.rds", package = "jhuanglabHyperion")
+#' sce.file <- system.file("extdata/sce.rds", package = "imctoolkits")
 #' sce <- readRDS(file = sce.file)
 #'
 #' plotViolin(sce, marker = "CD34")
@@ -289,7 +289,7 @@ plotViolin <- function(object,
 #'
 #' @examples
 #'
-#' sce.file <- system.file("extdata/sce.rds", package = "jhuanglabHyperion")
+#' sce.file <- system.file("extdata/sce.rds", package = "imctoolkits")
 #' sce <- readRDS(file = sce.file)
 #'
 #' # Runs only have more than two stages
@@ -377,7 +377,7 @@ plotPieCluster <- function(object,
 #'
 #' @examples
 #'
-#' sce.file <- system.file("extdata/sce.rds", package = "jhuanglabHyperion")
+#' sce.file <- system.file("extdata/sce.rds", package = "imctoolkits")
 #' sce <- readRDS(file = sce.file)
 #'
 #' plotCluster(sce)

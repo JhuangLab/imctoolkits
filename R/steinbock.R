@@ -16,7 +16,7 @@
 #' }
 
 steinbock <- function(stype, sample_id, panel_fn, dmax = 30, analysis_dir){
-  steinbock_ss <- path_package("jhuanglabHyperion", "extdata/scripts", "steinbock_ss.R")
+  steinbock_ss <- path_package("imctoolkits", "extdata/scripts", "steinbock_ss.R")
   classify_dir <- glue("{analysis_dir}/{stype}/measure/{sample_id}/classify") %>% checkdir()
   deepcell_dir <- glue("{analysis_dir}/{stype}/measure/{sample_id}/deepcell") %>% checkdir()
   intensities_dir <- glue("{analysis_dir}/{stype}/measure/{sample_id}/intensities") %>% checkdir()
